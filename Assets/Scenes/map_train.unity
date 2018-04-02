@@ -147,8 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4422ca7769b29bf4eb1b264f4920d978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FighterInputManager: {fileID: 456890734}
-  FighterPhysics: {fileID: 456890735}
+  InputManager: {fileID: 456890734}
+  Physics: {fileID: 456890735}
   StateMachine: {fileID: 456890732}
 --- !u!114 &456890734
 MonoBehaviour:
