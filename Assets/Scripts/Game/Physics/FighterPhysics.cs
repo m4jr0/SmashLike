@@ -6,7 +6,7 @@ public class FighterPhysics : MonoBehaviour {
     public int Direction {
         get { return this._direction; }
         set {
-            if (value >= 0) {
+            if (value > 0) {
                 // prevent from rotating the object if the direction remains
                 // the same
                 if (this._direction == 1) return;

@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b1b9d9fb3cf8243aecb215e1538ba7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Automaton: {fileID: 0}
   Animator: {fileID: 456890731}
+  Automaton: {fileID: 456890733}
   MaxHistorySize: 12
 --- !u!114 &456890733
 MonoBehaviour:
@@ -147,9 +147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4422ca7769b29bf4eb1b264f4920d978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateMachine: {fileID: 456890732}
   FighterInputManager: {fileID: 456890734}
   FighterPhysics: {fileID: 456890735}
+  StateMachine: {fileID: 456890732}
 --- !u!114 &456890734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
   CharacterController: {fileID: 456890738}
   FallSpeed: 2
   WalkSpeed: 5
+  DashInitialSpeed: 5
   RunSpeed: 10
   Velocity: 0
 --- !u!143 &456890738
@@ -359,7 +360,7 @@ Transform:
   m_GameObject: {fileID: 1101240495}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 6.29, y: 1, z: 36.73}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3

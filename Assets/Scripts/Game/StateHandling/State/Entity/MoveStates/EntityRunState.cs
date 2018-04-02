@@ -1,19 +1,13 @@
 ﻿public class EntityRunState : EntityState {
     private int _initDirection = 0;
 
-    public override State HandleInput(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return null;
-
-        EntityStateMachine entityStateMachine =
-            (EntityStateMachine) stateMachine;
-
-        if (!this.IsAnimationPlaying(entityStateMachine, "EntityRun")) {
+    public override State HandleInput() {
+        if (!this.IsAnimationPlayingMe()) {
             return null;
         }
 
-        EntityAutomaton automaton =
-            (EntityAutomaton) entityStateMachine.Automaton;
-        FighterInputManager inputManager = automaton.FighterInputManager;
+        FighterInputManager inputManager = 
+            this.StateMachine.Automaton.FighterInputManager;
 
         if (!inputManager.IsMove()) {
             return new EntityIdleState();
@@ -26,26 +20,15 @@
         return null;
     }
 
-    public override void Update(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
-
-        EntityAutomaton automaton = (EntityAutomaton)
-            ((EntityStateMachine)stateMachine).Automaton;
-
-        automaton.FighterPhysics.Run();
+    public override void Update() {
+        this.StateMachine.Automaton.FighterPhysics.Run();
     }
 
-    public override void Enter(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
-
-        EntityAutomaton automaton = (EntityAutomaton) 
-            ((EntityStateMachine) stateMachine).Automaton;
-
-
-
-        this._initDirection = automaton.FighterPhysics.Direction;
+    public override void Enter() {
+        this._initDirection =
+            this.StateMachine.Automaton.FighterPhysics.Direction;
 
         // necessary to keep track of history
-        this.SaveToHistory((EntityStateMachine) stateMachine);
+        this.SaveToHistory();
     }
 }

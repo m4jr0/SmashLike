@@ -4,19 +4,13 @@ public class EntityWalkState : EntityState {
     private float _walkForce = 0f;
     private readonly float _walkAnimationSpeed = 4f;
 
-    public override State HandleInput(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return null;
-
-        EntityStateMachine entityStateMachine =
-            (EntityStateMachine) stateMachine;
-
-        if (!this.IsAnimationPlaying(entityStateMachine, "EntityWalk")) {
+    public override State HandleInput() {
+        if (!this.IsAnimationPlayingMe()) {
             return null;
         }
 
-        EntityAutomaton automaton =
-            (EntityAutomaton) entityStateMachine.Automaton;
-        FighterInputManager inputManager = automaton.FighterInputManager;
+        FighterInputManager inputManager =
+            this.StateMachine.Automaton.FighterInputManager;
 
         if (!inputManager.IsMove()) {
             return new EntityIdleState();
@@ -29,31 +23,22 @@ public class EntityWalkState : EntityState {
         return null;
     }
 
-    public override void Update(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
-
-        EntityStateMachine entityStateMachine =
-            (EntityStateMachine) stateMachine;
-
-        EntityAutomaton automaton = (EntityAutomaton)
-            entityStateMachine.Automaton;
+    public override void Update() {
+        EntityAutomaton automaton = this.StateMachine.Automaton;
 
         this._walkForce = Mathf.Clamp(
             -1, automaton.FighterInputManager.GetMovePos(), 1
         ) * automaton.FighterPhysics.Direction;
 
-        this.SetSpeed(entityStateMachine);
+        this.SetSpeed();
 
         automaton.FighterPhysics.Walk(this._walkForce);
     }
 
-    public override void Enter(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
+    public override void Enter() {
+        base.Enter();
 
-        base.Enter(stateMachine);
-
-        EntityAutomaton automaton = (EntityAutomaton) 
-            ((EntityStateMachine) stateMachine).Automaton;
+        EntityAutomaton automaton = this.StateMachine.Automaton;
 
 
         int direction = 
@@ -62,11 +47,11 @@ public class EntityWalkState : EntityState {
         automaton.FighterPhysics.Direction = direction;
 
         // necessary to keep track of history
-        this.SaveToHistory((EntityStateMachine) stateMachine);
+        this.SaveToHistory();
     }
 
-    protected override void SetSpeed(EntityStateMachine stateMachine) {
-        stateMachine.Animator.speed = 
+    protected override void SetSpeed() {
+        this.StateMachine.Animator.speed = 
             this._walkForce * this._walkAnimationSpeed;
     }
 }

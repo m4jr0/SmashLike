@@ -1,12 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
+// an automaton can have several FSMs
 public class StateMachine : MonoBehaviour {
     [HideInInspector]
     public State CurrentState { get; protected set; }
     [HideInInspector]
-    // an automaton can have several FSMs
-    public Automaton Automaton = null;
     // a next state is set when handling an input (if any)
     protected State NextState = null;
 
@@ -31,12 +30,11 @@ public class StateMachine : MonoBehaviour {
     void FixedUpdate() {
         this.SwitchState();
 
-        this.CurrentState.Update(this);
+        this.CurrentState.Update();
     }
 
     // when initializing a state machine, we get the bound automaton
     protected virtual void Initialize(string startingState = null) {
-        this.Automaton = this.gameObject.GetComponent<Automaton>();
     }
 
     // simple function which will get a starting state type when initializing
@@ -56,7 +54,7 @@ public class StateMachine : MonoBehaviour {
 
     // by default, the handling of an input relies on the current state
     public virtual void HandleInput() {
-        this.NextState = this.CurrentState.HandleInput(this);
+        this.NextState = this.CurrentState.HandleInput();
     }
 
     // function used to switch state from a previous to a new one
@@ -65,10 +63,10 @@ public class StateMachine : MonoBehaviour {
         // returned any new state when handling the inputs
         if (this.NextState == null) return;
 
-        this.NextState.Initialize();
-        this.CurrentState.Exit(this);
+        this.NextState.Initialize(this);
+        this.CurrentState.Exit();
         this.CurrentState = this.NextState;
-        this.CurrentState.Enter(this);
+        this.CurrentState.Enter();
         this.NextState = null;
     }
 

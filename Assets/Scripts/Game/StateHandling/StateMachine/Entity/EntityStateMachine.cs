@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 public class EntityStateMachine : StateMachine {
     public Animator Animator = null;
     public PlayerController PlayerController = null;
+    public EntityAutomaton Automaton;
     [HideInInspector] public FixedSizedQueue<EntityState> StateHistory;
     public int MaxHistorySize = 12;
 
@@ -27,23 +28,23 @@ public class EntityStateMachine : StateMachine {
 
         this.Animator = this.GetComponent<Animator>();
 
+        this.StateHistory = new FixedSizedQueue<EntityState>(
+            this.MaxHistorySize
+        );
+
         Type stateType = this.GetStartingStateType(startingState);
 
         if (stateType == null) return;
 
         this.CurrentState = (EntityState) Activator.CreateInstance(stateType);
-
-        this.StateHistory = new FixedSizedQueue<EntityState>(
-            this.MaxHistorySize
-        );
+        this.CurrentState.Initialize(this);
     }
 
     protected override void SwitchState() {
-        if (!(this.NextState is EntityState)) {
-            return;
-        }
+        if (this.NextState == null) return;
 
         base.SwitchState();
+
         this.Animator.SetTrigger(this.CurrentState.GetType().Name);
     }
 }

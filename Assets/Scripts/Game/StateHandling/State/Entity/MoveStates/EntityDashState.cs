@@ -9,19 +9,13 @@
     private float _maxSpeedFrame = 0f;
     private float _acceleration = 0f;
 
-    public override State HandleInput(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return null;
-
-        EntityStateMachine entityStateMachine =
-            (EntityStateMachine) stateMachine;
-
-        if (!this.IsAnimationPlaying(entityStateMachine, "EntityDash")) {
+    public override State HandleInput() {
+        if (!this.IsAnimationPlayingMe()) {
             return null;
         }
 
-        EntityAutomaton automaton =
-            (EntityAutomaton) entityStateMachine.Automaton;
-        FighterInputManager inputManager = automaton.FighterInputManager;
+        FighterInputManager inputManager =
+            this.StateMachine.Automaton.FighterInputManager;
 
         if (this._initDirection != inputManager.MoveDirection) {
             return new EntityIdleState();
@@ -40,8 +34,8 @@
         return null;
     }
 
-    public override void Initialize() {
-        base.Initialize();
+    public override void Initialize(StateMachine stateMachine) {
+        base.Initialize(stateMachine);
 
         this.MaxFrame = 15;
         this.IASA = this.MaxFrame;
@@ -50,24 +44,17 @@
         this._maxSpeedFrame = this.MaxFrame - 5;
     }
 
-    public override void Update(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
+    public override void Update() {
 
         this.CurrentFrame++;
 
-        EntityAutomaton automaton = (EntityAutomaton)
-            ((EntityStateMachine)stateMachine).Automaton;
-
-        automaton.FighterPhysics.Accelerate(this._acceleration);
+        this.StateMachine.Automaton.FighterPhysics.Accelerate(
+            this._acceleration);
     }
 
-    public override void Enter(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
-
-        EntityAutomaton automaton = (EntityAutomaton) 
-            ((EntityStateMachine) stateMachine).Automaton;
-
-        FighterPhysics fighterPhysics = automaton.FighterPhysics;
+    public override void Enter() {
+        FighterPhysics fighterPhysics = 
+            this.StateMachine.Automaton.FighterPhysics;
 
         fighterPhysics.CurrentSpeed = fighterPhysics.DashInitialSpeed;
 
@@ -77,15 +64,11 @@
                              this._maxSpeedFrame;
 
         // necessary to keep track of history
-        this.SaveToHistory((EntityStateMachine) stateMachine);
+        this.SaveToHistory();
     }
 
-    public override void Exit(StateMachine stateMachine) {
-        if (!(stateMachine is EntityStateMachine)) return;
-
-        EntityAutomaton automaton = (EntityAutomaton)
-            ((EntityStateMachine)stateMachine).Automaton;
-
-        automaton.FighterPhysics.Accelerate(this._acceleration);
+    public override void Exit() {
+        this.StateMachine.Automaton.FighterPhysics.Accelerate(
+            this._acceleration);
     }
 }

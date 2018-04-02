@@ -18,7 +18,9 @@ public class EntityFramedState : EntityState {
     // speed correctly
     protected bool IsSpeedSet = false;
 
-    public override void Initialize() {
+    public override void Initialize(StateMachine stateMachine) {
+        base.Initialize(stateMachine);
+
         // by default, everything equals MaxFrame, which equals zero
         this.MaxFrame = 0;
         this.IASA = this.MaxFrame;
@@ -26,7 +28,7 @@ public class EntityFramedState : EntityState {
         this.MaxActiveState = this.MaxFrame;
     }
 
-    public override void Update(StateMachine stateMachine) {
+    public override void Update() {
         // a default update means incrementing the current frame
         this.CurrentFrame++;
     }
@@ -34,12 +36,12 @@ public class EntityFramedState : EntityState {
     // this function allows the programmer to modify the current state with the
     // player inputs. For instance, an idle state can be interrupted if the
     // player chooses to run: HandleInput will therefore return a "run" state
-    public override State HandleInput(StateMachine stateMachine) {
+    public override State HandleInput() {
         return null;
     }
 
     // check if the state can be interrupted by another one
-    public virtual bool IsInterruptible(EntityStateMachine stateMachine) {
+    public virtual bool IsInterruptible() {
         return (this.CurrentFrame >= this.IASA);
     }
 
@@ -47,12 +49,11 @@ public class EntityFramedState : EntityState {
         return this.CurrentFrame >= this.MaxFrame;
     }
 
-    public virtual EntityState CheckInterruptibleActions(
-        StateMachine stateMachine) {
+    public virtual EntityState CheckInterruptibleActions() {
         return null;
     }
 
-    protected override void SetSpeed(EntityStateMachine stateMachine) {
+    protected override void SetSpeed() {
         /**
          * First, we need to get the total amount of time taken by the state:
          * * 1> 1 / Time.fixedDeltaTime gives the actual amount of frames per
@@ -66,7 +67,7 @@ public class EntityFramedState : EntityState {
 
         // then, we get the current AnimatorStateInfo...
         AnimatorStateInfo animatorStateInfo =
-            stateMachine.Animator.GetCurrentAnimatorStateInfo(0);
+            this.StateMachine.Animator.GetCurrentAnimatorStateInfo(0);
 
         /**
          * ... to compute the speed needed for the state animation to have.
@@ -75,12 +76,13 @@ public class EntityFramedState : EntityState {
          * animations are played (it's a float, meaning 1.0 is the normal
          * speed).
          *
-         * So, animatorStateInfo.length * stateMachine.Animator.speed gives the
+         * So, animatorStateInfo.length * StateMachine.Animator.speed gives the
          * total amount of time that needs to be compared to the desired
          * animation time to get a ratio.
          */
-        stateMachine.Animator.speed = (animatorStateInfo.length *
-            stateMachine.Animator.speed) / desiredAnimationTime;
+        this.StateMachine.Animator.speed =
+            (animatorStateInfo.length * this.StateMachine.Animator.speed) /
+            desiredAnimationTime;
 
         // setting this to true means not calling SetSpeed anymore
         this.IsSpeedSet = true;

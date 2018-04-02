@@ -4,6 +4,4 @@
  * attributes / methods necessary for it. */
 
 public class Automaton : MonoBehaviour {
-
-    public StateMachine StateMachine = null;
 }

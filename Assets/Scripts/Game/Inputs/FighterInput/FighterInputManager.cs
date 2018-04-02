@@ -45,7 +45,7 @@ public class FighterInputManager : MonoBehaviour {
         get { return this._direction; }
     }
 
-    private int _direction = 1;
+    private int _direction = -1;
 
     void Awake() {
         this.Initialize();
