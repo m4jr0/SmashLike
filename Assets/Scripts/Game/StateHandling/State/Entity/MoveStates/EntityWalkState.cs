@@ -40,7 +40,6 @@ public class EntityWalkState : EntityState {
 
         EntityAutomaton automaton = this.StateMachine.Automaton;
 
-
         int direction = 
             automaton.FighterInputManager.GetMovePos() > 0 ? 1 : -1;
 
@@ -52,6 +51,6 @@ public class EntityWalkState : EntityState {
 
     protected override void SetSpeed() {
         this.StateMachine.Animator.speed = 
-            this._walkForce * this._walkAnimationSpeed;
+            Mathf.Abs(this._walkForce) * this._walkAnimationSpeed;
     }
 }
