@@ -163,7 +163,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerId: 0
   MoveThreshold: 0.02
-  DashThreshold: 1000
+  DashCounterThreshold: 3
+  DashThreshold: 0.8
 --- !u!114 &456890735
 MonoBehaviour:
   m_ObjectHideFlags: 0
