@@ -1,4 +1,6 @@
-﻿public class EntityDashState : EntityFramedState {
+﻿using UnityEngine;
+
+public class EntityDashState : EntityFramedState {
     public bool HasStopped {
         get { return this._hasStopped; }
     }

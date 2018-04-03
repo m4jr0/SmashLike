@@ -1,4 +1,6 @@
-﻿public class EntityIdleState : EntityState {
+﻿using UnityEngine;
+
+public class EntityIdleState : EntityState {
     public override State HandleInput() {
         if (!this.IsAnimationPlayingMe()) {
             return null;

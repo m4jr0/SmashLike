@@ -38,6 +38,7 @@ public class EntityStateMachine : StateMachine {
 
         this.CurrentState = (EntityState) Activator.CreateInstance(stateType);
         this.CurrentState.Initialize(this);
+        this.CurrentState.Enter();
     }
 
     protected override void SwitchState() {
