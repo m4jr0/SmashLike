@@ -1,12 +1,4 @@
-﻿using UnityEngine;
-
-public class EntityDashState : EntityFramedState {
-    public bool HasStopped {
-        get { return this._hasStopped; }
-    }
-
-    private bool _hasStopped = false;
-
+﻿public class EntityDashState : EntityFramedState {
     private int _initDirection = 0;
 
     public override State HandleInput() {
@@ -20,12 +12,6 @@ public class EntityDashState : EntityFramedState {
         if (inputManager.IsDash() &&
             this._initDirection != inputManager.MoveDir) {
             return new EntityIdleState();
-        }
-
-        if (!inputManager.IsMove()) this._hasStopped = true;
-
-        if (this.HasStopped) {
-            return new EntityRunBrakeState();
         }
 
         if (this.IsStateFinished()) {

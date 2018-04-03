@@ -9,7 +9,7 @@
 
         // handle jump here
 
-        return this.IsStateFinished() ? new EntityRunState() : null;
+        return this.IsStateFinished() ? new EntityIdleState() : null;
     }
 
     public override void Initialize(StateMachine stateMachine) {

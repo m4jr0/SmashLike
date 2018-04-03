@@ -9,16 +9,6 @@ public class EntityIdleState : EntityState {
         EntityInputManager inputManager = 
             this.StateMachine.Automaton.InputManager;
 
-        EntityState lastState = this.StateMachine.StateHistory.Peek();
-
-        if (lastState is EntityDashState) {
-            EntityDashState entityDashState = (EntityDashState) lastState;
-
-            if (!entityDashState.HasStopped) {
-                return new EntityDashState();
-            }
-        }
-
         if (inputManager.IsDash()) {
             return new EntityDashState();
         }
