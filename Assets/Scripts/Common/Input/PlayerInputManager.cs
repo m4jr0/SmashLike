@@ -40,11 +40,6 @@ public class PlayerInputManager : InputManager {
         }
     }
 
-    public void Update() {
-        Debug.Log("R " + this.DPadRightDown());
-        Debug.Log("D " + this.DPadDownDown());
-    } 
-
     public bool DPadRightDown() {
         if (this._isDPadXInUse) return false;
 
