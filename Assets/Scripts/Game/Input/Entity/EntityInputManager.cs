@@ -44,8 +44,6 @@ public class EntityInputManager : PlayerInputManager {
         get { return this._moveDir; }
         private set {
             if (this.MoveDir == value) return;
-
-            this.ResetDash();
             this._moveDir = value;
         }
     }
@@ -101,12 +99,22 @@ public class EntityInputManager : PlayerInputManager {
     public virtual int GetMoveDir() {
         int sign = Math.Sign(this.MovePos);
 
-        return sign == 0 ? this.MoveDir : sign;
+        int newDir = sign == 0 ? this.MoveDir : sign;
+
+        if (newDir != this.MoveDir) this.ResetDash();
+
+        return newDir;
     }
 
-    public virtual void UpdateDash() {;
+    public virtual void UpdateDash() {
         if (Mathf.Abs(this.MovePos) > this.DashThreshold) {
             this._isDashed = true;
+
+            return;
+        }
+
+        if (Math.Abs(this.MovePos) < this.MoveThreshold) {
+            this.ResetDash();
 
             return;
         }
@@ -128,6 +136,7 @@ public class EntityInputManager : PlayerInputManager {
     }
 
     public virtual bool IsDash() {
-        return this._isDashed && this._dashCounter < this.DashCounterThreshold;
+        return this._isDashed && 
+               this._dashCounter <= this.DashCounterThreshold;
     }
 }

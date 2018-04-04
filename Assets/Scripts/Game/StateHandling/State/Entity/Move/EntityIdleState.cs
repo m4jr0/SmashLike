@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class EntityIdleState : EntityState {
+﻿public class EntityIdleState : EntityState {
     public override State HandleInput() {
         if (!this.IsAnimationPlayingMe()) {
             return null;
@@ -9,6 +7,7 @@ public class EntityIdleState : EntityState {
         EntityInputManager inputManager = 
             this.StateMachine.Automaton.InputManager;
 
+        // differencier isDash de isDashBack
         if (inputManager.IsDash()) {
             return new EntityDashState();
         }
