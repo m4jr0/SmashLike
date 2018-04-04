@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityInputManager : PlayerInputManager {
+    public EntityPhysics Physics;
     public float MoveThreshold = 0.02f;
     public int DashCounterThreshold = 3;
     public float DashThreshold = .8f;
@@ -58,7 +59,8 @@ public class EntityInputManager : PlayerInputManager {
 
         this.InputIdDict = new Dictionary<string, string>() {
             {"fight_horizontal", "fight_horizontal"},
-            {"fight_vertical", "fight_vertical"}
+            {"fight_vertical", "fight_vertical"},
+            {"fight_jump", "fight_jump"}
         };
     }
 
@@ -138,5 +140,10 @@ public class EntityInputManager : PlayerInputManager {
     public virtual bool IsDash() {
         return this._isDashed && 
                this._dashCounter <= this.DashCounterThreshold;
+    }
+
+    public virtual bool IsJump() {
+        return this.Physics.IsGrounded && 
+               Input.GetButtonDown(this.InputIdDict["fight_jump"]);
     }
 }

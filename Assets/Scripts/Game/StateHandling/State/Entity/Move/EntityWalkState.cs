@@ -12,6 +12,10 @@ public class EntityWalkState : EntityState {
         EntityInputManager inputManager =
             this.StateMachine.Automaton.InputManager;
 
+        if (inputManager.IsJump()) {
+            return new EntityJumpSquatState();
+        }
+
         if (!inputManager.IsMove()) {
             return new EntityIdleState();
         }

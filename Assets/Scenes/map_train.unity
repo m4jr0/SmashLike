@@ -176,7 +176,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 360064141}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 456890736}
@@ -231,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerId: 0
+  Physics: {fileID: 456890735}
   MoveThreshold: 0.02
   DashCounterThreshold: 3
   DashThreshold: 0.6
@@ -251,7 +252,7 @@ MonoBehaviour:
   Ground:
     serializedVersion: 2
     m_Bits: 256
-  FallingSpeed: 2
+  FallingSpeed: 30
   WalkSpeed: 5
   DashInitialSpeed: 5
   RunSpeed: 10
@@ -589,7 +590,7 @@ GameObject:
   - component: {fileID: 1101240498}
   - component: {fileID: 1101240497}
   - component: {fileID: 1101240496}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -948,7 +949,7 @@ MonoBehaviour:
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_ForceModuleActive: 1
 --- !u!114 &1148711923
 MonoBehaviour:
   m_ObjectHideFlags: 0

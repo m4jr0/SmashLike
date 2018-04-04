@@ -7,7 +7,10 @@
         EntityInputManager inputManager = 
             this.StateMachine.Automaton.InputManager;
 
-        // differencier isDash de isDashBack
+        if (inputManager.IsJump()) {
+            return new EntityJumpSquatState();
+        }
+
         if (inputManager.IsDash()) {
             return new EntityDashState();
         }

@@ -9,6 +9,10 @@
         EntityInputManager inputManager =
             this.StateMachine.Automaton.InputManager;
 
+        if (inputManager.IsJump()) {
+            return new EntityJumpSquatState();
+        }
+
         if (inputManager.IsDash() &&
             this._initDirection != inputManager.MoveDir) {
             return new EntityIdleState();

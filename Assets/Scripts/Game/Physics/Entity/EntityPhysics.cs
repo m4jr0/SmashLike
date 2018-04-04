@@ -46,7 +46,7 @@ public class EntityPhysics : MonoBehaviour {
     }
 
     public virtual void CheckIfGrounded() {
-        Physics.CheckSphere(
+        this.IsGrounded = Physics.CheckSphere(
             GroundChecker.position,
             GroundDistance,
             Ground,
@@ -91,5 +91,9 @@ public class EntityPhysics : MonoBehaviour {
         this.CurrentSpeed += acceleration;
 
         this.Move(this.CurrentSpeed);
+    }
+
+    public virtual void Jump() {
+        this.Velocity.y += Mathf.Sqrt(1 * 2f * this.FallingSpeed);
     }
 }
