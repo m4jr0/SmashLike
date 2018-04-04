@@ -45,7 +45,5 @@ public class EntityStateMachine : StateMachine {
         if (this.NextState == null) return;
 
         base.SwitchState();
-
-        this.Animator.SetTrigger(this.CurrentState.GetType().Name);
     }
 }

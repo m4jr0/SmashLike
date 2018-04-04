@@ -3,39 +3,26 @@
 public class EntityPhysics : MonoBehaviour {
     public CharacterController CharacterController;
 
+    public bool IsGrounded { get; protected set; }
+    public float GroundDistance = 0.2f;
+    public Transform GroundChecker;
+    public LayerMask Ground;
+
     public int Direction {
         get { return this._direction; }
         set {
-            if (value > 0) {
-                // prevent from rotating the object if the direction remains
-                // the same
-                if (this._direction == 1) return;
-
-                this._direction = 1;
-            } else {
-                // prevent from rotating the object if the direction remains
-                // the same
-                if (this._direction == -1) return;
-
-                this._direction = -1;
-            }
-
-            this.gameObject.transform.eulerAngles = new Vector3(
-                this.gameObject.transform.eulerAngles.x,
-                this.gameObject.transform.eulerAngles.y -
-                    this._direction * 180,
-                this.gameObject.transform.eulerAngles.z
-            );
+            this._direction = value;
+            this.transform.forward = new Vector3(this._direction, 0, 0);
         }
     }
 
     private int _direction;
 
-    public float FallSpeed = 2f;
+    public float FallingSpeed = 2f;
     public float WalkSpeed = 2f;
     public float DashInitialSpeed = 5f;
     public float RunSpeed = 4f;
-    public float Velocity = 0f;
+    public Vector3 Velocity = Vector3.zero;
 
     public float CurrentSpeed {
         get { return this._currentSpeed; }
@@ -50,6 +37,31 @@ public class EntityPhysics : MonoBehaviour {
 
     void Start() {
         this.Initialize();
+    }
+
+    void Update() {
+        this.CheckIfGrounded();
+        this.UpdateFallingSpeed();
+        this.UpdateVelocity();
+    }
+
+    public virtual void CheckIfGrounded() {
+        Physics.CheckSphere(
+            GroundChecker.position,
+            GroundDistance,
+            Ground,
+            QueryTriggerInteraction.Ignore
+        );
+
+        if (this.IsGrounded && this.Velocity.y < 0) this.Velocity.y = 0f;
+    }
+
+    public virtual void UpdateFallingSpeed() {
+        this.Velocity.y -= this.FallingSpeed * Time.deltaTime;
+    }
+
+    public virtual void UpdateVelocity() {
+        this.CharacterController.Move(this.Velocity * Time.deltaTime);
     }
 
     public virtual void Initialize() {

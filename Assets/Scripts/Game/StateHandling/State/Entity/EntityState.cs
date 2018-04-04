@@ -40,6 +40,15 @@
         this.StateMachine.Animator.speed = speed;
     }
 
+    public virtual void EnterAnimation() {
+        this.InitialSpeed = this.StateMachine.Animator.speed;
+        this.StateMachine.Animator.SetTrigger(this.GetType().Name);
+    }
+
+    public virtual void ExitAnimation() {
+        this.StateMachine.Animator.speed = this.InitialSpeed;
+    }
+
     public virtual void SaveToHistory() {
         this.StateMachine.StateHistory.Enqueue(this);
     }
@@ -55,10 +64,10 @@
     public override void Enter() {
         base.Enter();
 
-        this.InitialSpeed = this.StateMachine.Animator.speed;
+        this.EnterAnimation();
     }
 
     public override void Exit() {
-        this.StateMachine.Animator.speed = this.InitialSpeed;
+        this.ExitAnimation();
     }
 }
