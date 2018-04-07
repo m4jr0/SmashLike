@@ -7,9 +7,35 @@ public class PlayerInputManager : InputManager {
 
     private bool _isDPadXInUse = false;
     private bool _isDPadYInUse = false;
+    private float _timer = 0f;
+    private float _previousTime = 0f;
 
     void Awake() {
         this.Initialize();
+    }
+
+    void Update() {
+        this._timer += Time.realtimeSinceStartup - this._previousTime;
+        this._previousTime = Time.realtimeSinceStartup;
+
+        if (!(this._timer - Time.fixedDeltaTime > 0f) ||
+            !this.CheckDPadAxis()) {
+            return;
+        }
+
+        this.ResetDPadAxis();
+        this._timer = 0f;
+    }
+
+    private bool CheckDPadAxis() {
+        return this._isDPadXInUse || this._isDPadYInUse;
+    }
+
+    private void ResetDPadAxis() {
+        this._isDPadXInUse = Mathf.Abs(
+            Input.GetAxis(this.ButtonIdDict["dpad_x"])) > 0f;
+        this._isDPadYInUse = Mathf.Abs(
+            Input.GetAxis(this.ButtonIdDict["dpad_y"])) > 0f;
     }
 
     protected virtual void InitializeInputIdDicts() {
