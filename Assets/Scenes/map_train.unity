@@ -252,7 +252,8 @@ MonoBehaviour:
   Ground:
     serializedVersion: 2
     m_Bits: 256
-  FallingSpeed: 30
+  FallingSpeed: 60
+  JumpSpeed: 3
   WalkSpeed: 5
   DashInitialSpeed: 5
   RunSpeed: 10

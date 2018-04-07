@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EntityInputManager : PlayerInputManager {
     public EntityPhysics Physics;
-    public float MoveThreshold = 0.02f;
+    public float MoveThreshold = 0.01f;
     public int DashCounterThreshold = 3;
     public float DashThreshold = .8f;
 
@@ -144,6 +144,6 @@ public class EntityInputManager : PlayerInputManager {
 
     public virtual bool IsJump() {
         return this.Physics.IsGrounded && 
-               Input.GetButtonDown(this.InputIdDict["fight_jump"]);
+               Input.GetButton(this.InputIdDict["fight_jump"]);
     }
 }

@@ -18,7 +18,8 @@ public class EntityPhysics : MonoBehaviour {
 
     private int _direction;
 
-    public float FallingSpeed = 2f;
+    public float FallingSpeed = 60f;
+    public float JumpSpeed = 3f;
     public float WalkSpeed = 2f;
     public float DashInitialSpeed = 5f;
     public float RunSpeed = 4f;
@@ -61,6 +62,7 @@ public class EntityPhysics : MonoBehaviour {
     }
 
     public virtual void UpdateVelocity() {
+        Debug.Log(this.Velocity);
         this.CharacterController.Move(this.Velocity * Time.deltaTime);
     }
 
@@ -94,6 +96,6 @@ public class EntityPhysics : MonoBehaviour {
     }
 
     public virtual void Jump() {
-        this.Velocity.y += Mathf.Sqrt(1 * 2f * this.FallingSpeed);
+        this.Velocity.y += Mathf.Sqrt(this.JumpSpeed * 2f * this.FallingSpeed);
     }
 }
