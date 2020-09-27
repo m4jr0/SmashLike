@@ -1,21 +1,21 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class DebugViewer : MonoBehaviour {
-    public Text TextObject = null;
+public class DebugViewer : MonoBehaviour
+{
+    public Text textObject = null;
 
-    // to be overriden in child, if necessary
-    public virtual string Label {
-        get { return ""; }
+    // To be overriden in child, if necessary.
+    public virtual string label
+    {
+        get
+        {
+            return "";
+        }
     }
 
-    void Awake() {
-        this.TextObject = this.gameObject.GetComponent<Text>();
-    }
-
-    void Start() {
-    }
-
-    void Update() {
+    void Awake()
+    {
+        textObject = gameObject.GetComponent<Text>();
     }
 }

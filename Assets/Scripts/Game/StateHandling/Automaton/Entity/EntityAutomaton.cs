@@ -1,15 +1,14 @@
-﻿/* EntityAutomaton is an object that contains all the FSMs and other useful
+/* EntityAutomaton is an object that contains all the FSMs and other useful
  * attributes/methods necessary for it. */
 
-public class EntityAutomaton : Automaton {
-    public EntityInputManager InputManager;
-    public EntityPhysics Physics;
-    public EntityStateMachine StateMachine;
+public class EntityAutomaton : Automaton
+{
+    public EntityInputManager inputManager;
+    public EntityPhysics physics;
+    public EntityStateMachine stateMachine;
 
-    void Awake() {
-        if ((this.StateMachine =
-                this.gameObject.GetComponent<EntityStateMachine>()) != null) {
-            return;
-        }
+    void Awake()
+    {
+        stateMachine = gameObject.GetComponent<EntityStateMachine>();
     }
 }

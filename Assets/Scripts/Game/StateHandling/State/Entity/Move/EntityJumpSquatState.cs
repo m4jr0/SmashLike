@@ -1,28 +1,23 @@
-public class EntityDashState : EntityFramedState
+public class EntityJumpSquatState : EntityFramedState
 {
-    private int m_initDirection = 0;
     private EntityInputManager m_inputManager;
+    private bool m_isShortHop = false;
 
     public override State HandleInput()
     {
-        if (!IsAnimationPlayingMe())
-        {
+        /*if (!IsAnimationPlayingMe())
+		{
             return null;
-        }
+        }*/
 
-        if (m_inputManager.IsJump())
+        if (!m_isShortHop && !m_inputManager.IsJump())
         {
-            return new EntityJumpSquatState();
-        }
-
-        if (m_inputManager.IsDash() && m_initDirection != m_inputManager.moveDir)
-        {
-            return new EntityIdleState();
+            m_isShortHop = true;
         }
 
         if (IsStateFinished())
         {
-            return new EntityRunState();
+            return new EntityJumpState(m_isShortHop);
         }
 
         return null;
@@ -32,7 +27,7 @@ public class EntityDashState : EntityFramedState
     {
         base.Initialize(stateMachine);
 
-        maxFrame = 15;
+        maxFrame = 5;
         iASA = maxFrame;
         minActiveState = 1;
         maxActiveState = maxFrame;
@@ -41,7 +36,8 @@ public class EntityDashState : EntityFramedState
     public override void Update()
     {
         currentFrame++;
-        stateMachine.automaton.physics.Run();
+
+        // TODO: Handle update behavior.
     }
 
     public override void Enter()
@@ -50,7 +46,6 @@ public class EntityDashState : EntityFramedState
 
         EntityPhysics entityPhysics = stateMachine.automaton.physics;
         entityPhysics.currentSpeed = entityPhysics.dashInitialSpeed;
-        m_initDirection = entityPhysics.direction;
 
         m_inputManager = stateMachine.automaton.inputManager;
 

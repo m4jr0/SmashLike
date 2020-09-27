@@ -1,14 +1,20 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class DebugViewCurrentState : DebugViewer {
-    public EntityStateMachine StateMachine = null;
+public class DebugViewCurrentState : DebugViewer
+{
+    public EntityStateMachine stateMachine = null;
 
     // to be overriden in child, if necessary
-    public override string Label {
-        get { return "CS: "; }
+    public override string label
+    {
+        get
+        {
+            return "CS: ";
+        }
     }
 
-    void Update() {
-        this.TextObject.text = this.Label + this.StateMachine.CurrentState;
+    void Update()
+    {
+        textObject.text = label + stateMachine.currentState;
     }
 }

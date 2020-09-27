@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour {
-    public Dictionary<string, string> InputIdDict;
+public class InputManager : MonoBehaviour
+{
+    public Dictionary<string, string> inputIdDict;
 
-    protected virtual void Initialize() {
-        this.InputIdDict = new Dictionary<string, string>();
+    protected virtual void Initialize()
+    {
+        inputIdDict = new Dictionary<string, string>();
     }
 }

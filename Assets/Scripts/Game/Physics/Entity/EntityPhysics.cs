@@ -1,101 +1,131 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class EntityPhysics : MonoBehaviour {
-    public CharacterController CharacterController;
+public class EntityPhysics : MonoBehaviour
+{
+    public CharacterController characterController;
 
-    public bool IsGrounded { get; protected set; }
-    public float GroundDistance = 0.2f;
-    public Transform GroundChecker;
-    public LayerMask Ground;
+    public bool isGrounded
+    {
+        get; protected set;
+    }
+    public float groundDistance = 0.2f;
+    public Transform groundChecker;
+    public LayerMask ground;
 
-    public int Direction {
-        get { return this._direction; }
-        set {
-            this._direction = value;
-            this.transform.forward = new Vector3(this._direction, 0, 0);
+    public int direction
+    {
+        get
+        {
+            return m_direction;
+        }
+        set
+        {
+            m_direction = value;
+            transform.forward = new Vector3(m_direction, 0, 0);
         }
     }
 
-    private int _direction;
+    private int m_direction;
 
-    public float FallingSpeed = 60f;
-    public float JumpSpeed = 3f;
-    public float WalkSpeed = 2f;
-    public float DashInitialSpeed = 5f;
-    public float RunSpeed = 4f;
-    public Vector3 Velocity = Vector3.zero;
+    public float fallingSpeed = 60f;
+    public float jumpSpeed = 3f;
+    public float walkSpeed = 2f;
+    public float dashInitialSpeed = 5f;
+    public float runSpeed = 4f;
+    public Vector3 velocity = Vector3.zero;
 
-    public float CurrentSpeed {
-        get { return this._currentSpeed; }
-        set { this._currentSpeed = Mathf.Clamp(0, value, this.RunSpeed); }
+    public float currentSpeed
+    {
+        get
+        {
+            return m_currentSpeed;
+        }
+        set
+        {
+            m_currentSpeed = Mathf.Clamp(0, value, runSpeed);
+        }
     }
 
-    public virtual void SwapDirection() {
-        this.Direction = -this.Direction;
+    private float m_currentSpeed;
+
+    public virtual void SwapDirection()
+    {
+        direction = -direction;
     }
 
-    private float _currentSpeed;
-
-    void Start() {
-        this.Initialize();
+    void Start()
+    {
+        Initialize();
     }
 
-    void Update() {
-        this.CheckIfGrounded();
-        this.UpdateFallingSpeed();
-        this.UpdateVelocity();
+    void Update()
+    {
+        CheckIfGrounded();
+        UpdateFallingSpeed();
+        UpdateVelocity();
     }
 
-    public virtual void CheckIfGrounded() {
-        this.IsGrounded = Physics.CheckSphere(
-            GroundChecker.position,
-            GroundDistance,
-            Ground,
+    public virtual void CheckIfGrounded()
+    {
+        isGrounded = Physics.CheckSphere(
+            groundChecker.position,
+            groundDistance,
+            ground,
             QueryTriggerInteraction.Ignore
         );
 
-        if (this.IsGrounded && this.Velocity.y < 0) this.Velocity.y = 0f;
-    }
-
-    public virtual void UpdateFallingSpeed() {
-        this.Velocity.y -= this.FallingSpeed * Time.deltaTime;
-    }
-
-    public virtual void UpdateVelocity() {
-        Debug.Log(this.Velocity);
-        this.CharacterController.Move(this.Velocity * Time.deltaTime);
-    }
-
-    public virtual void Initialize() {
-        if (this.gameObject.transform.eulerAngles.y > 0) {
-            this._direction = -1;
-        } else {
-            this._direction = 1;
+        if (isGrounded)
+        {
+            velocity.y = 0f;
         }
     }
 
-    public virtual void Walk(float factor = 1f) {
-        this.Move(this.WalkSpeed * factor);
+    public virtual void UpdateFallingSpeed()
+    {
+        velocity.y -= fallingSpeed * Time.deltaTime;
     }
 
-    public virtual void Run(float factor = 1f) {
-        this.Move(this.RunSpeed * factor);
+    public virtual void UpdateVelocity()
+    {
+        characterController.Move(velocity * Time.deltaTime);
     }
 
-    public virtual void Move(float speed = 1.0f) {
-        Vector3 toMove = new Vector3(this.Direction, 0, 0) * 
-                         Time.deltaTime * speed;
-
-        this.CharacterController.Move(toMove);
+    public virtual void Initialize()
+    {
+        if (gameObject.transform.eulerAngles.y > 0)
+        {
+            m_direction = -1;
+        }
+        else
+        {
+            m_direction = 1;
+        }
     }
 
-    public virtual void Accelerate(float acceleration = 1.0f) {
-        this.CurrentSpeed += acceleration;
-
-        this.Move(this.CurrentSpeed);
+    public virtual void Walk(float factor = 1f)
+    {
+        Move(walkSpeed * factor);
     }
 
-    public virtual void Jump() {
-        this.Velocity.y += Mathf.Sqrt(this.JumpSpeed * 2f * this.FallingSpeed);
+    public virtual void Run(float factor = 1f)
+    {
+        Move(runSpeed * factor);
+    }
+
+    public virtual void Move(float speed = 1.0f)
+    {
+        Vector3 toMove = new Vector3(direction, 0, 0) * Time.deltaTime * speed;
+        characterController.Move(toMove);
+    }
+
+    public virtual void Accelerate(float acceleration = 1.0f)
+    {
+        currentSpeed += acceleration;
+        Move(currentSpeed);
+    }
+
+    public virtual void Jump()
+    {
+        velocity.y += Mathf.Sqrt(jumpSpeed * 2f * fallingSpeed);
     }
 }

@@ -1,18 +1,24 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class GameManager : MonoBehaviour {
-    public bool IsRunning = true;
-    public static GameManager Instance = null;
+public class GameManager : MonoBehaviour
+{
+    public bool isRunning = true;
+    public static GameManager instance = null;
 
-    void Awake() {
-        if (GameManager.Instance == null) {
-            GameManager.Instance = this;
-        } else if (GameManager.Instance != this) {
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
             Destroy(gameObject);
         }
     }
 
-    void Update() {
-        Time.timeScale = this.IsRunning ? 1f : 0f;
+    void Update()
+    {
+        Time.timeScale = isRunning ? 1f : 0f;
     }
 }

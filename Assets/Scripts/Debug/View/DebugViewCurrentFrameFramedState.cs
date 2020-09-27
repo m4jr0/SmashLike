@@ -1,19 +1,23 @@
-﻿public class DebugViewCurrentFrameFramedState : DebugViewCurrentState {
-    // to be overriden in child, if necessary
-    public override string Label {
-        get {
+public class DebugViewCurrentFrameFramedState : DebugViewCurrentState
+{
+    // To be overriden in child, if necessary.
+    public override string label
+    {
+        get
+        {
             return "FS: ";
         }
     }
 
-    void Update() {
-        if (!(this.StateMachine.CurrentState is EntityFramedState)) {
-            this.TextObject.text = this.Label + "–";
-        } else {
-            EntityFramedState entityFramedState =
-                (EntityFramedState) this.StateMachine.CurrentState;
-
-            this.TextObject.text = this.Label + entityFramedState.CurrentFrame;
+    void Update()
+    {
+        if (stateMachine.currentState is EntityFramedState entityFramedState)
+        {
+            textObject.text = label + entityFramedState.currentFrame;
+        }
+        else
+        {
+            textObject.text = label + "–";
         }
     }
 }

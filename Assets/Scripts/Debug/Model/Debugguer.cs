@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class Debugguer : MonoBehaviour {
-    public bool IsEnabled = true;
-    public GameObject DebuggerContainer = null;
+public class Debugguer : MonoBehaviour
+{
+    public bool isEnabled = true;
+    public GameObject debuggerContainer = null;
 
-	void Update () {
-	    if (this.DebuggerContainer == null) return;
+    void Update()
+    {
+        if (debuggerContainer == null)
+        {
+            return;
+        }
 
-	    this.DebuggerContainer.SetActive(this.IsEnabled);
-	}
+        debuggerContainer.SetActive(isEnabled);
+    }
 }

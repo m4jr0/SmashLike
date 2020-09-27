@@ -1,149 +1,186 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityInputManager : PlayerInputManager {
-    public EntityPhysics Physics;
-    public float MoveThreshold = 0.01f;
-    public int DashCounterThreshold = 3;
-    public float DashThreshold = .8f;
+public class EntityInputManager : PlayerInputManager
+{
+    public EntityPhysics physics;
+    public float moveThreshold = 0.004f;
+    public int dashCounterThreshold = 3;
+    public float dashThreshold = .8f;
 
-    public float MovePos {
-        get { return this._movePos; }
-        set {
-            this._previousMovePos = this._movePos;
-            this._movePos = value;
+    public float movePos
+    {
+        get
+        {
+            return m_movePos;
+        }
+        set
+        {
+            m_previousMovePos = m_movePos;
+            m_movePos = value;
         }
     }
 
-    private float _movePos;
+    private float m_movePos;
 
-    public float MoveVel {
-        get { return this._moveVel; }
-        set {
-            this._previousMoveVel = this._moveVel;
-            this._moveVel = value;
+    public float moveVel
+    {
+        get
+        {
+            return m_moveVel;
+        }
+        set
+        {
+            m_previousMoveVel = m_moveVel;
+            m_moveVel = value;
         }
     }
 
-    private float _moveVel;
+    private float m_moveVel;
 
-    public float MoveAcc {
-        get { return this._moveAcc; }
-        set {
-            this._previousMoveAcc = this._moveAcc;
-            this._moveAcc = value;
+    public float moveAcc
+    {
+        get
+        {
+            return m_moveAcc;
+        }
+        set
+        {
+            m_previousMoveAcc = m_moveAcc;
+            m_moveAcc = value;
         }
     }
 
-    private float _moveAcc;
-    private float _previousMovePos = 0f;
-    private float _previousMoveVel = 0f;
-    private float _previousMoveAcc = 0f;
+    private float m_moveAcc;
+    private float m_previousMovePos = 0f;
+    private float m_previousMoveVel = 0f;
+    private float m_previousMoveAcc = 0f;
 
-    public int MoveDir {
-        get { return this._moveDir; }
-        private set {
-            if (this.MoveDir == value) return;
-            this._moveDir = value;
+    public int moveDir
+    {
+        get
+        {
+            return m_moveDir;
+        }
+        private set
+        {
+            if (moveDir != value)
+            {
+                m_moveDir = value;
+            }
         }
     }
 
-    private int _moveDir = -1;
+    private int m_moveDir = -1;
 
-    private int _dashCounter = 0;
-    private bool _isDashed = false;
+    private int m_dashCounter = 0;
+    private bool m_isDashed = false;
 
-    protected override void InitializeInputIdDicts() {
+    protected override void InitializeInputIdDicts()
+    {
         base.InitializeInputIdDicts();
 
-        this.InputIdDict = new Dictionary<string, string>() {
+        inputIdDict = new Dictionary<string, string>() {
             {"fight_horizontal", "fight_horizontal"},
             {"fight_vertical", "fight_vertical"},
             {"fight_jump", "fight_jump"}
         };
     }
 
-    protected override void Initialize() {
-        this.InitializeInputIdDicts();
+    protected override void Initialize()
+    {
+        InitializeInputIdDicts();
     }
 
-    void FixedUpdate() {
-        this.MovePos = this.GetMovePos();
-        this.MoveVel = this.GetMoveVel();
-        this.MoveAcc = this.GetMoveAcc();
-        this.MoveDir = this.GetMoveDir();
+    void FixedUpdate()
+    {
+        movePos = GetMovePos();
+        moveVel = GetMoveVel();
+        moveAcc = GetMoveAcc();
+        moveDir = GetMoveDir();
 
-        this.UpdateDash();
+        UpdateDash();
     }
 
-    public virtual float GetMovePos() {
+    public virtual float GetMovePos()
+    {
         float movePos = 0f;
-        movePos += Input.GetAxis(this.InputIdDict["fight_horizontal"]);
+        movePos += Input.GetAxis(inputIdDict["fight_horizontal"]);
 
         return -movePos;
     }
 
-    public virtual float GetMoveVel() {
+    public virtual float GetMoveVel()
+    {
         float distancePerFrame = Mathf.Abs(
-            this.MovePos - this._previousMovePos
+            movePos - m_previousMovePos
         );
 
         return distancePerFrame / Time.deltaTime;
     }
 
-    public virtual float GetMoveAcc() {
-        float velocityDeltaPerFrame = this.MoveVel - this._previousMoveVel;
-
+    public virtual float GetMoveAcc()
+    {
+        float velocityDeltaPerFrame = moveVel - m_previousMoveVel;
         return velocityDeltaPerFrame / Time.deltaTime;
     }
 
-    public virtual int GetMoveDir() {
-        int sign = Math.Sign(this.MovePos);
+    public virtual int GetMoveDir()
+    {
+        int sign = Math.Sign(movePos);
+        int newDir = sign == 0 ? moveDir : sign;
 
-        int newDir = sign == 0 ? this.MoveDir : sign;
-
-        if (newDir != this.MoveDir) this.ResetDash();
+        if (newDir != moveDir)
+        {
+            ResetDash();
+        }
 
         return newDir;
     }
 
-    public virtual void UpdateDash() {
-        if (Mathf.Abs(this.MovePos) > this.DashThreshold) {
-            this._isDashed = true;
+    protected virtual void UpdateDash()
+    {
+        if (Mathf.Abs(movePos) > dashThreshold)
+        {
+            m_isDashed = true;
 
             return;
         }
 
-        if (Math.Abs(this.MovePos) < this.MoveThreshold) {
-            this.ResetDash();
+        if (Math.Abs(movePos) < moveThreshold)
+        {
+            ResetDash();
 
             return;
         }
 
-        this._dashCounter++;
+        m_dashCounter++;
     }
 
-    public virtual void ResetDash() {
-        this._dashCounter = 0;
-        this._isDashed = false;
+    protected virtual void ResetDash()
+    {
+        m_dashCounter = 0;
+        m_isDashed = false;
     }
 
-    public virtual bool IsMove() {
-        return Mathf.Abs(this.MovePos) >= this.MoveThreshold;
+    public virtual bool IsMove()
+    {
+        return Mathf.Abs(movePos) >= moveThreshold;
     }
 
-    public virtual bool IsWalk() {
-        return this.IsMove() && !this.IsDash();
+    public virtual bool IsWalk()
+    {
+        return IsMove() && !IsDash();
     }
 
-    public virtual bool IsDash() {
-        return this._isDashed && 
-               this._dashCounter <= this.DashCounterThreshold;
+    public virtual bool IsDash()
+    {
+        return m_isDashed && m_dashCounter <= dashCounterThreshold;
     }
 
-    public virtual bool IsJump() {
-        return this.Physics.IsGrounded && 
-               Input.GetButton(this.InputIdDict["fight_jump"]);
+    public virtual bool IsJump()
+    {
+        return physics.isGrounded && Input.GetButton(inputIdDict["fight_jump"]);
     }
 }

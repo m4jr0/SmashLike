@@ -1,4 +1,4 @@
-public class EntityDashState : EntityFramedState
+public class EntityTurnAroundState : EntityFramedState
 {
     private int m_initDirection = 0;
     private EntityInputManager m_inputManager;

@@ -1,14 +1,23 @@
-﻿public class DebugViewCurrentFrame : DebugViewer {
-    public FrameCounter FrameCounter = null;
+public class DebugViewCurrentFrame : DebugViewer
+{
+    public FrameCounter frameCounter = null;
 
-    // to be overriden in child, if necessary
-    public override string Label {
-        get { return "Frame: "; }
+    // To be overriden in child, if necessary.
+    public override string label
+    {
+        get
+        {
+            return "Frame: ";
+        }
     }
 
-    void Update() {
-        if (this.FrameCounter == null || this.TextObject == null) return;
+    void Update()
+    {
+        if (frameCounter == null || textObject == null)
+        {
+            return;
+        }
 
-        this.TextObject.text = this.Label + this.FrameCounter.CurrentFrame;
+        textObject.text = label + frameCounter.currentFrame;
     }
 }

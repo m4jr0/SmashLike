@@ -1,34 +1,53 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class FrameByFrame : MonoBehaviour {
-	public Transform Target { get; protected set; }
-    public bool IsEnabled = false;
-	public DebugInputManager InputManager;
+public class FrameByFrame : MonoBehaviour
+{
+    public Transform target
+    {
+        get; protected set;
+    }
 
-    private bool _hasChanged = false;
+    public bool isEnabled = false;
+    public DebugInputManager inputManager;
 
-    void Update() {
-        this.CheckIfEnabled();
+    private bool m_hasChanged = false;
 
-        if (this._hasChanged) {
-            GameManager.Instance.IsRunning = !this.IsEnabled;
+    void Update()
+    {
+        CheckIfEnabled();
 
-            this._hasChanged = false;
-        } else {
-            if (!this.IsEnabled) return;
+        if (m_hasChanged)
+        {
+            GameManager.instance.isRunning = !isEnabled;
+            m_hasChanged = false;
+        }
+        else
+        {
+            if (!isEnabled || !inputManager.IsNextFrame())
+            {
+                return;
+            }
 
-            GameManager.Instance.IsRunning = false;
-
-            if (!this.InputManager.IsNextFrame()) return;
-
-            GameManager.Instance.IsRunning = true;
+            GameManager.instance.isRunning = true;
         }
     }
 
-    protected virtual void CheckIfEnabled() {
-        if (!this.InputManager.IsFrameByFrame()) return;
+    void FixedUpdate()
+    {
+        if (isEnabled)
+        {
+            GameManager.instance.isRunning = false;
+        }
+    }
 
-        this.IsEnabled = !this.IsEnabled;
-        this._hasChanged = true;
+    protected virtual void CheckIfEnabled()
+    {
+        if (!inputManager.IsFrameByFrame())
+        {
+            return;
+        }
+
+        isEnabled = !isEnabled;
+        m_hasChanged = true;
     }
 }

@@ -1,48 +1,59 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class EntityStateMachine : StateMachine {
-    public Animator Animator = null;
-    public PlayerController PlayerController = null;
-    public EntityAutomaton Automaton;
-    [HideInInspector] public FixedSizedQueue<EntityState> StateHistory;
-    public int MaxHistorySize = 12;
+public class EntityStateMachine : StateMachine
+{
+    public Animator animator = null;
+    public PlayerController playerController = null;
+    public EntityAutomaton automaton;
+    [HideInInspector] public FixedSizedQueue<EntityState> stateHistory;
+    public int maxHistorySize = 12;
 
-    // to be changed in a child class, if necessary
-    public override string DefaultState {
-        get { return "EntityIdleState"; }
+    // To be changed in a child class, if necessary.
+    public override string defaultState
+    {
+        get
+        {
+            return "EntityIdleState";
+        }
     }
 
-    void Update() {
-        // in each update, we check the player inputs
-        this.HandleInput();
+    void Update()
+    {
+        // In each update, we check the player inputs.
+        HandleInput();
     }
 
-    void Start() {
-        this.Initialize(null);
+    void Start()
+    {
+        Initialize(null);
     }
 
-    protected override void Initialize(string startingState = null) {
+    protected override void Initialize(string startingState = null)
+    {
         base.Initialize(null);
 
-        this.Animator = this.GetComponent<Animator>();
+        animator = GetComponent<Animator>();
+        stateHistory = new FixedSizedQueue<EntityState>(maxHistorySize);
+        Type stateType = GetStartingStateType(startingState);
 
-        this.StateHistory = new FixedSizedQueue<EntityState>(
-            this.MaxHistorySize
-        );
+        if (stateType == null)
+        {
+            return;
+        }
 
-        Type stateType = this.GetStartingStateType(startingState);
-
-        if (stateType == null) return;
-
-        this.CurrentState = (EntityState) Activator.CreateInstance(stateType);
-        this.CurrentState.Initialize(this);
-        this.CurrentState.Enter();
+        currentState = (EntityState)Activator.CreateInstance(stateType);
+        currentState.Initialize(this);
+        currentState.Enter();
     }
 
-    protected override void SwitchState() {
-        if (this.NextState == null) return;
+    protected override void SwitchState()
+    {
+        if (m_nextState == null)
+        {
+            return;
+        }
 
         base.SwitchState();
     }

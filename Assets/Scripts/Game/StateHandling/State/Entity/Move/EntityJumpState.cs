@@ -1,7 +1,15 @@
-public class EntityDashState : EntityFramedState
+using UnityEngine;
+
+public class EntityJumpState : EntityFramedState
 {
-    private int m_initDirection = 0;
     private EntityInputManager m_inputManager;
+    private readonly bool m_isShortHop = false;
+
+    public EntityJumpState(bool isShortHop = false)
+    {
+        m_isShortHop = isShortHop;
+        Debug.Log("Short hop? " + m_isShortHop);
+    }
 
     public override State HandleInput()
     {
@@ -10,19 +18,9 @@ public class EntityDashState : EntityFramedState
             return null;
         }
 
-        if (m_inputManager.IsJump())
-        {
-            return new EntityJumpSquatState();
-        }
-
-        if (m_inputManager.IsDash() && m_initDirection != m_inputManager.moveDir)
-        {
-            return new EntityIdleState();
-        }
-
         if (IsStateFinished())
         {
-            return new EntityRunState();
+            return new EntityFallState();
         }
 
         return null;
@@ -41,7 +39,7 @@ public class EntityDashState : EntityFramedState
     public override void Update()
     {
         currentFrame++;
-        stateMachine.automaton.physics.Run();
+        // TODO: Handle update behavior.
     }
 
     public override void Enter()
@@ -50,7 +48,6 @@ public class EntityDashState : EntityFramedState
 
         EntityPhysics entityPhysics = stateMachine.automaton.physics;
         entityPhysics.currentSpeed = entityPhysics.dashInitialSpeed;
-        m_initDirection = entityPhysics.direction;
 
         m_inputManager = stateMachine.automaton.inputManager;
 

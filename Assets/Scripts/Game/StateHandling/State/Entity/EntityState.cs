@@ -1,73 +1,83 @@
-﻿public class EntityState : State {
-    public EntityStateMachine StateMachine = null;
+public class EntityState : State
+{
+    public EntityStateMachine stateMachine = null;
 
-    // initial speed of the state, which is the initial speed of the animator
-    protected float InitialSpeed = 0;
+    // Initial speed of the state, which is the initial speed of the animator.
+    protected float m_initialSpeed = 0;
 
-    public override State HandleInput() {
+    public override State HandleInput()
+    {
         return null;
     }
 
-    public override void Initialize(StateMachine stateMachine) {
-        this.StateMachine = (EntityStateMachine) stateMachine;
+    public override void Initialize(StateMachine stateMachine)
+    {
+        this.stateMachine = (EntityStateMachine)stateMachine;
     }
 
-    public virtual bool IsAnimationPlayingMe() {
-        return StateMachine.Animator.GetCurrentAnimatorStateInfo(0)
-            .IsName(this.GetType().Name);
+    public virtual bool IsAnimationPlayingMe()
+    {
+        return stateMachine.animator.GetCurrentAnimatorStateInfo(0).IsName(GetType().Name);
     }
 
-    public virtual bool IsCurrentAnimationFinished() {
-        return this.IsCurrentAnimationPlayedPast(1);
+    public virtual bool IsCurrentAnimationFinished()
+    {
+        return IsCurrentAnimationPlayedPast(1);
     }
 
-    public virtual bool IsCurrentAnimationPlayedPast(
-        float normalizedTime = 1) {
-        return StateMachine.Animator.GetCurrentAnimatorStateInfo(0)
-                   .normalizedTime > normalizedTime &&
-               !StateMachine.Animator.IsInTransition(0);
+    public virtual bool IsCurrentAnimationPlayedPast(float normalizedTime = 1)
+    {
+        return stateMachine.animator.GetCurrentAnimatorStateInfo(0).normalizedTime > normalizedTime && !stateMachine.animator.IsInTransition(0);
     }
 
-    public virtual void FreezeAnimation() {
-        this.SetAnimationSpeed(0);
+    public virtual void FreezeAnimation()
+    {
+        SetAnimationSpeed(0);
     }
 
-    public virtual void ResumeNormalAnimation() {
-        this.SetAnimationSpeed(1);
+    public virtual void ResumeNormalAnimation()
+    {
+        SetAnimationSpeed(1);
     }
 
-    public virtual void SetAnimationSpeed(float speed = 1) {
-        this.StateMachine.Animator.speed = speed;
+    public virtual void SetAnimationSpeed(float speed = 1)
+    {
+        stateMachine.animator.speed = speed;
     }
 
-    public virtual void EnterAnimation() {
-        this.InitialSpeed = this.StateMachine.Animator.speed;
-        this.StateMachine.Animator.SetTrigger(this.GetType().Name);
+    public virtual void EnterAnimation()
+    {
+        m_initialSpeed = stateMachine.animator.speed;
+        stateMachine.animator.SetTrigger(GetType().Name);
     }
 
-    public virtual void ExitAnimation() {
-        this.StateMachine.Animator.speed = this.InitialSpeed;
+    public virtual void ExitAnimation()
+    {
+        stateMachine.animator.speed = m_initialSpeed;
     }
 
-    public virtual void SaveToHistory() {
-        this.StateMachine.StateHistory.Enqueue(this);
+    public virtual void SaveToHistory()
+    {
+        stateMachine.stateHistory.Enqueue(this);
     }
 
-    public virtual bool IsLastState(string lastStateGuessed) {
-        return StateMachine.StateHistory.Peek().GetType().Name ==
-               lastStateGuessed;
+    public virtual bool IsLastState(string lastStateGuessed)
+    {
+        return stateMachine.stateHistory.Peek().GetType().Name == lastStateGuessed;
     }
 
-    protected virtual void SetSpeed() {
+    protected virtual void SetSpeed()
+    {
     }
 
-    public override void Enter() {
+    public override void Enter()
+    {
         base.Enter();
-
-        this.EnterAnimation();
+        EnterAnimation();
     }
 
-    public override void Exit() {
-        this.ExitAnimation();
+    public override void Exit()
+    {
+        ExitAnimation();
     }
 }

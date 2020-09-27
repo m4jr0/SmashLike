@@ -1,13 +1,18 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-// an automaton can have several FSMs
-public class StateMachine : MonoBehaviour {
+// An automaton can have several FSMs.
+public class StateMachine : MonoBehaviour
+{
     [HideInInspector]
-    public State CurrentState { get; protected set; }
+    public State currentState
+    {
+        get; protected set;
+    }
+
     [HideInInspector]
-    // a next state is set when handling an input (if any)
-    protected State NextState = null;
+    // A next state is set when handling an input (if any).
+    protected State m_nextState = null;
 
     /**
      * If no state is given when initializing a state machine, a default one
@@ -15,63 +20,79 @@ public class StateMachine : MonoBehaviour {
      *
      * It can be changed in a child class, if necessary.
      */
-    public virtual string DefaultState {
-        get {
+    public virtual string defaultState
+    {
+        get
+        {
             return "State";
         }
     }
 
-    // inputs are handled once per frame
-    void Update() {
-        this.HandleInput();
+    // Inputs are handled once per frame.
+    void Update()
+    {
+        HandleInput();
     }
 
-    // logic is handled one per "logical" frame
-    void FixedUpdate() {
-        this.SwitchState();
+    // Logic is handled one per "logical" frame.
+    void FixedUpdate()
+    {
+        SwitchState();
 
-        this.CurrentState.Update();
+        currentState.Update();
     }
 
-    // when initializing a state machine, we get the bound automaton
-    protected virtual void Initialize(string startingState = null) {
+    // When initializing a state machine, we get the bound automaton.
+    protected virtual void Initialize(string startingState = null)
+    {
     }
 
-    // simple function which will get a starting state type when initializing
-    protected virtual Type GetStartingStateType(string startingState) {
-        if (String.IsNullOrEmpty(startingState)) {
-            startingState = this.DefaultState;
+    // Simple function which will get a starting state type when initializing.
+    protected virtual Type GetStartingStateType(string startingState)
+    {
+        if (string.IsNullOrEmpty(startingState))
+        {
+            startingState = defaultState;
         }
 
         Type stateType = Type.GetType(startingState);
 
-        if (stateType != null) return stateType;
+        if (stateType != null)
+        {
+            return stateType;
+        }
 
         Debug.LogError(startingState + ": unknown state to initialize!");
 
         return null;
     }
 
-    // by default, the handling of an input relies on the current state
-    public virtual void HandleInput() {
-        this.NextState = this.CurrentState.HandleInput();
+    // By default, the handling of an input relies on the current state.
+    public virtual void HandleInput()
+    {
+        m_nextState = currentState.HandleInput();
     }
 
-    // function used to switch state from a previous to a new one
-    protected virtual void SwitchState() {
-        // if the next state is null, it means  the current state did not
-        // returned any new state when handling the inputs
-        if (this.NextState == null) return;
+    // Function used to switch state from a previous to a new one.
+    protected virtual void SwitchState()
+    {
+        // If the next state is null, it means  the current state did not
+        // returned any new state when handling the inputs.
+        if (m_nextState == null)
+        {
+            return;
+        }
 
-        this.NextState.Initialize(this);
-        this.CurrentState.Exit();
-        this.CurrentState = this.NextState;
-        this.CurrentState.Enter();
-        this.NextState = null;
+        m_nextState.Initialize(this);
+        currentState.Exit();
+        currentState = m_nextState;
+        currentState.Enter();
+        m_nextState = null;
     }
 
-    public virtual void SetState(State state) {
-        this.NextState = state;
-        this.SwitchState();
+    public virtual void SetState(State state)
+    {
+        m_nextState = state;
+        SwitchState();
     }
 }

@@ -1,16 +1,23 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class FrameCounter : MonoBehaviour {
+public class FrameCounter : MonoBehaviour
+{
     [HideInInspector]
-    public int FramePerSecond = -1;
-    public int CurrentFrame { get; protected set; }
+    public int framePerSecond = -1;
 
-    void Awake() {
-        this.FramePerSecond = (int)(1 / Time.fixedDeltaTime);
-        this.CurrentFrame = 0;
+    public int currentFrame
+    {
+        get; protected set;
     }
 
-    void FixedUpdate () {
-        this.CurrentFrame = (this.CurrentFrame + 1) % this.FramePerSecond;
+    void Awake()
+    {
+        framePerSecond = (int)(1 / Time.fixedDeltaTime);
+        currentFrame = 0;
+    }
+
+    void FixedUpdate()
+    {
+        currentFrame = (currentFrame + 1) % framePerSecond;
     }
 }

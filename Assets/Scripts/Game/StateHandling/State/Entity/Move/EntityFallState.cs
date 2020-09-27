@@ -1,4 +1,4 @@
-public class EntityRunBrakeState : EntityFramedState
+public class EntityFallState : EntityState
 {
     private EntityInputManager _inputManager;
 
@@ -9,33 +9,32 @@ public class EntityRunBrakeState : EntityFramedState
             return null;
         }
 
-        if (_inputManager.IsJump())
-        {
-            return new EntityJumpSquatState();
-        }
+        // TODO: Handle states.
+        return new EntityIdleState();
 
-        return IsStateFinished() ? new EntityIdleState() : null;
+        return null;
     }
 
     public override void Initialize(StateMachine stateMachine)
     {
         base.Initialize(stateMachine);
-
-        maxFrame = 15;
-        iASA = maxFrame;
-        minActiveState = 1;
-        maxActiveState = maxFrame;
     }
 
     public override void Update()
     {
-        currentFrame++;
+        stateMachine.automaton.physics.Run();
     }
 
     public override void Enter()
     {
         base.Enter();
 
+        EntityPhysics entityPhysics = stateMachine.automaton.physics;
+        entityPhysics.currentSpeed = entityPhysics.dashInitialSpeed;
+
         _inputManager = stateMachine.automaton.inputManager;
+
+        // Necessary to keep track of history.
+        SaveToHistory();
     }
 }
