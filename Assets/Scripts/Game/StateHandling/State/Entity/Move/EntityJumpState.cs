@@ -36,7 +36,7 @@ public class EntityJumpState : EntityFramedState
         maxActiveState = maxFrame;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         currentFrame++;
         // TODO: Handle update behavior.

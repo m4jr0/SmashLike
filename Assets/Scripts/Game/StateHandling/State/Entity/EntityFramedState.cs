@@ -42,7 +42,7 @@ public class EntityFramedState : EntityState
         maxActiveState = maxFrame;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         // A default update means incrementing the current frame.
         currentFrame++;

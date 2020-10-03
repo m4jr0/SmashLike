@@ -28,7 +28,7 @@ public class EntityRunState : EntityState
         return null;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         stateMachine.automaton.physics.Run();
     }

@@ -5,77 +5,20 @@ using UnityEngine;
 public class EntityInputManager : PlayerInputManager
 {
     public EntityPhysics physics;
-    public float moveThreshold = 0.004f;
     public int dashCounterThreshold = 3;
+
+    public float slowWalkThreshold = .2f;
     public float dashThreshold = .8f;
 
     public float movePos
     {
-        get
-        {
-            return m_movePos;
-        }
-        set
-        {
-            m_previousMovePos = m_movePos;
-            m_movePos = value;
-        }
+        get; protected set;
     }
-
-    private float m_movePos;
-
-    public float moveVel
-    {
-        get
-        {
-            return m_moveVel;
-        }
-        set
-        {
-            m_previousMoveVel = m_moveVel;
-            m_moveVel = value;
-        }
-    }
-
-    private float m_moveVel;
-
-    public float moveAcc
-    {
-        get
-        {
-            return m_moveAcc;
-        }
-        set
-        {
-            m_previousMoveAcc = m_moveAcc;
-            m_moveAcc = value;
-        }
-    }
-
-    private float m_moveAcc;
-    private float m_previousMovePos = 0f;
-    private float m_previousMoveVel = 0f;
-    private float m_previousMoveAcc = 0f;
 
     public int moveDir
     {
-        get
-        {
-            return m_moveDir;
-        }
-        private set
-        {
-            if (moveDir != value)
-            {
-                m_moveDir = value;
-            }
-        }
-    }
-
-    private int m_moveDir = -1;
-
-    private int m_dashCounter = 0;
-    private bool m_isDashed = false;
+        get; protected set;
+    } = -1;
 
     protected override void InitializeInputIdDicts()
     {
@@ -95,88 +38,37 @@ public class EntityInputManager : PlayerInputManager
 
     void FixedUpdate()
     {
-        movePos = GetMovePos();
-        moveVel = GetMoveVel();
-        moveAcc = GetMoveAcc();
-        moveDir = GetMoveDir();
-
-        UpdateDash();
+        UpdateMovePos();
+        UpdateMoveDir();
     }
 
-    public virtual float GetMovePos()
+    protected virtual void UpdateMovePos()
     {
-        float movePos = 0f;
-        movePos += Input.GetAxis(inputIdDict["fight_horizontal"]);
-
-        return -movePos;
+        movePos = -Input.GetAxis(inputIdDict["fight_horizontal"]);
+        Debug.Log(movePos);
     }
 
-    public virtual float GetMoveVel()
-    {
-        float distancePerFrame = Mathf.Abs(
-            movePos - m_previousMovePos
-        );
-
-        return distancePerFrame / Time.deltaTime;
-    }
-
-    public virtual float GetMoveAcc()
-    {
-        float velocityDeltaPerFrame = moveVel - m_previousMoveVel;
-        return velocityDeltaPerFrame / Time.deltaTime;
-    }
-
-    public virtual int GetMoveDir()
+    protected virtual void UpdateMoveDir()
     {
         int sign = Math.Sign(movePos);
-        int newDir = sign == 0 ? moveDir : sign;
-
-        if (newDir != moveDir)
-        {
-            ResetDash();
-        }
-
-        return newDir;
-    }
-
-    protected virtual void UpdateDash()
-    {
-        if (Mathf.Abs(movePos) > dashThreshold)
-        {
-            m_isDashed = true;
-
-            return;
-        }
-
-        if (Math.Abs(movePos) < moveThreshold)
-        {
-            ResetDash();
-
-            return;
-        }
-
-        m_dashCounter++;
-    }
-
-    protected virtual void ResetDash()
-    {
-        m_dashCounter = 0;
-        m_isDashed = false;
+        moveDir = sign == 0 ? moveDir : sign;
     }
 
     public virtual bool IsMove()
     {
-        return Mathf.Abs(movePos) >= moveThreshold;
+        return Mathf.Abs(movePos) > 0;
     }
 
     public virtual bool IsWalk()
     {
-        return IsMove() && !IsDash();
+        float absMovePos = Math.Abs(movePos);
+        return absMovePos >= slowWalkThreshold && absMovePos < dashThreshold;
     }
 
     public virtual bool IsDash()
     {
-        return m_isDashed && m_dashCounter <= dashCounterThreshold;
+        float absMovePos = Math.Abs(movePos);
+        return absMovePos >= dashThreshold;
     }
 
     public virtual bool IsJump()

@@ -28,18 +28,12 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    // Inputs are handled once per frame.
-    void Update()
-    {
-        HandleInput();
-    }
-
     // Logic is handled one per "logical" frame.
     void FixedUpdate()
     {
+        HandleInput();
         SwitchState();
-
-        currentState.Update();
+        currentState.FixedUpdate();
     }
 
     // When initializing a state machine, we get the bound automaton.

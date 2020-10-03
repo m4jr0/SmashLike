@@ -1,6 +1,6 @@
 public class EntityFallState : EntityState
 {
-    private EntityInputManager _inputManager;
+    private EntityInputManager m_inputManager;
 
     public override State HandleInput()
     {
@@ -20,7 +20,7 @@ public class EntityFallState : EntityState
         base.Initialize(stateMachine);
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         stateMachine.automaton.physics.Run();
     }
@@ -32,7 +32,7 @@ public class EntityFallState : EntityState
         EntityPhysics entityPhysics = stateMachine.automaton.physics;
         entityPhysics.currentSpeed = entityPhysics.dashInitialSpeed;
 
-        _inputManager = stateMachine.automaton.inputManager;
+        m_inputManager = stateMachine.automaton.inputManager;
 
         // Necessary to keep track of history.
         SaveToHistory();

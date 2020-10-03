@@ -32,9 +32,9 @@ public class EntityWalkState : EntityState
         return null;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
-        m_walkForce = Mathf.Clamp(-1, m_automaton.inputManager.GetMovePos(), 1) * m_automaton.physics.direction;
+        m_walkForce = Mathf.Clamp(-1, m_automaton.inputManager.movePos, 1) * m_automaton.physics.direction;
         SetSpeed();
         m_automaton.physics.Walk(m_walkForce);
     }
@@ -44,7 +44,7 @@ public class EntityWalkState : EntityState
         base.Enter();
 
         m_automaton = stateMachine.automaton;
-        int direction = m_automaton.inputManager.GetMovePos() > 0 ? 1 : -1;
+        int direction = m_automaton.inputManager.movePos > 0 ? 1 : -1;
         m_automaton.physics.direction = direction;
 
         m_inputManager = stateMachine.automaton.inputManager;

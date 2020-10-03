@@ -27,7 +27,7 @@ public class EntityRunBrakeState : EntityFramedState
         maxActiveState = maxFrame;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         currentFrame++;
     }

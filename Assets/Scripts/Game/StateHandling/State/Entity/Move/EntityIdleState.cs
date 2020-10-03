@@ -29,7 +29,7 @@ public class EntityIdleState : EntityState
         return null;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         if (m_physics.direction != m_automaton.inputManager.moveDir)
         {

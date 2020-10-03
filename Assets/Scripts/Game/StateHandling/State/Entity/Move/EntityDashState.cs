@@ -38,7 +38,7 @@ public class EntityDashState : EntityFramedState
         maxActiveState = maxFrame;
     }
 
-    public override void Update()
+    public override void FixedUpdate()
     {
         currentFrame++;
         stateMachine.automaton.physics.Run();

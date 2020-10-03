@@ -12,7 +12,7 @@ public class State
     }
 
     // Called at each update.
-    public virtual void Update()
+    public virtual void FixedUpdate()
     {
     }
 
